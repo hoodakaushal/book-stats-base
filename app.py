@@ -29,8 +29,9 @@ def get_all_authors():
     conn = getConnection()
     cur = conn.cursor()
     cur.execute("select * from authors")
+    data = cur.fetchall()
     conn.close()
-    return cur.fetchall()
+    return data
 
 
 @app.route('/author/gender-bulk', methods=['POST'])
