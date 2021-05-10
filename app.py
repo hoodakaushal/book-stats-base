@@ -51,7 +51,7 @@ def get_author_genders():
     # Find missing authors
     toFetch = list(set([x for x in authors if x not in genders]))
     fetched = []
-    repsonse = Genderize().get([x.split(" ")[0] for x in toFetch])
+    repsonse = Genderize(api_key="a619730661a7ce6b4f8e8e6b047046a2").get([x.split(" ")[0] for x in toFetch])
     for author, resp in zip(toFetch, repsonse):
         fetched.append((author, resp["gender"], "genderize"))
 
@@ -77,7 +77,7 @@ def get_author_gender():
     cur.execute(query, (name,))
     rows = cur.fetchall()
     if not rows:
-        gender = Genderize().get([name.split(" ")[0]])[0]["gender"]
+        gender = Genderize(api_key="a619730661a7ce6b4f8e8e6b047046a2").get([name.split(" ")[0]])[0]["gender"]
         source = "genderize"
         insert = "insert into authors (name, gender, gender_source) values (%s, %s, %s)"
         cur.execute(insert, (name, gender, source))
