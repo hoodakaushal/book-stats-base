@@ -3,6 +3,7 @@ import os
 import psycopg2
 from flask import Flask
 from flask import request
+from flask import jsonify
 from flask_cors import CORS
 from genderize import Genderize
 
@@ -31,7 +32,7 @@ def get_all_authors():
     cur.execute("select * from authors")
     data = cur.fetchall()
     conn.close()
-    return data
+    return jsonify(data)
 
 
 @app.route('/author/gender-bulk', methods=['POST'])
