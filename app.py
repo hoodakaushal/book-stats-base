@@ -1,10 +1,10 @@
+import os
+
 import psycopg2
-import requests
-from genderize import Genderize
 from flask import Flask
 from flask import request
 from flask_cors import CORS
-import os
+from genderize import Genderize
 
 app = Flask(__name__)
 CORS(app)

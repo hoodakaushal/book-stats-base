@@ -1,1 +1,1 @@
-web: gunicorn app:author
+web: gunicorn app:app
