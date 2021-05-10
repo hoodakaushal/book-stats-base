@@ -4,6 +4,7 @@ from genderize import Genderize
 from flask import Flask
 from flask import request
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -21,8 +22,7 @@ def get_author_genders():
 
     # Fetch authors from DB
     query = "select authors.name, authors.gender, authors.gender_source from authors where authors.name IN %s"
-    conn = psycopg2.connect(database="book_stats", user="postgres", password="q", host="127.0.0.1", port="5432")
-    conn.set_session(autocommit=True)
+    conn = getConnection()
     cur = conn.cursor()
     cur.execute(query, (authors,))
     rows = cur.fetchall()
@@ -44,14 +44,14 @@ def get_author_genders():
     execute_values(cur,
                    "INSERT INTO authors (name, gender, gender_source) VALUES %s",
                    fetched)
+    conn.close()
     return genders
 
 
 @app.route('/author/gender')
 def get_author_gender():
     name = request.args.get('name')
-    conn = psycopg2.connect(database="book_stats", user="postgres", password="q", host="127.0.0.1", port="5432")
-    conn.set_session(autocommit=True)
+    conn = getConnection()
     cur = conn.cursor()
     query = "select authors.gender, authors.gender_source from authors where authors.name = %s"
     cur.execute(query, (name,))
@@ -73,6 +73,19 @@ def get_author_gender():
     }
 
 
+def getConnection():
+    ON_HEROKU = os.environ.get('ON_HEROKU')
+
+    if ON_HEROKU:
+        DATABASE_URL = os.environ['DATABASE_URL']
+        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    else:
+        conn = psycopg2.connect(database="book_stats", user="postgres", password="q", host="127.0.0.1", port="5432")
+    conn.set_session(autocommit=True)
+    return conn
+
+
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
+    port = int(os.environ.get('PORT', 5000))
     app.run(threaded=True, port=5000)
