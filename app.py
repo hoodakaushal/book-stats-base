@@ -24,6 +24,12 @@ def setup():
         "gender_source varchar(100))")
     return {"set": "up"}
 
+@app.route('/authors')
+def get_all_authors():
+    conn = getConnection()
+    cur = conn.cursor()
+    return cur.execute("select * from authors").fetchall()
+
 
 @app.route('/author/gender-bulk', methods=['POST'])
 def get_author_genders():
