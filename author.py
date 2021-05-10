@@ -15,6 +15,16 @@ def index():
     return 'Server Works!'
 
 
+@app.route('/setup')
+def setup():
+    conn = getConnection()
+    cur = conn.cursor()
+    cur.execute(
+        "create table if not exists authors (id serial primary key, name varchar(100), gender varchar(100), "
+        "gender_source varchar(100)")
+    return {"set": "up"}
+
+
 @app.route('/author/gender-bulk', methods=['POST'])
 def get_author_genders():
     app.logger.info(request.json)
