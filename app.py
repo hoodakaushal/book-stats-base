@@ -21,7 +21,7 @@ def setup():
     cur = conn.cursor()
     cur.execute(
         "create table if not exists authors (id serial primary key, name varchar(100), gender varchar(100), "
-        "gender_source varchar(100)")
+        "gender_source varchar(100))")
     return {"set": "up"}
 
 
