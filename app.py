@@ -97,7 +97,7 @@ def getConnection():
     ON_HEROKU = os.environ.get('ON_HEROKU')
 
     if ON_HEROKU:
-        DATABASE_URL = os.environ['DATABASE_URL']
+        DATABASE_URL = os.environ['HEROKU_POSTGRESQL_AQUA']
         conn = psycopg2.connect(DATABASE_URL, sslmode='require')
     else:
         conn = psycopg2.connect(database="book_stats", user="postgres", password="q", host="127.0.0.1", port="5432")
